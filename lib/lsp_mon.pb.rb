@@ -61,7 +61,7 @@ class Lsp_mon < ::Protobuf::Message; end
 ##
 # File Options
 #
-set_option :optimize_for, ::Google::Protobuf::FileOptions::OptimizeMode::LITE_RUNTIME
+#set_option :optimize_for, ::Google::Protobuf::FileOptions::OptimizeMode::LITE_RUNTIME
 
 
 ##

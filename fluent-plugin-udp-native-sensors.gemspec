@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.authors       = ["Vijay Kumar gadde"]
   s.email         = ["vijaygadde@gmail.com"]
 
-  s.description   = %q{Input plugin for Fluentd for Juniper devices telemetry data streaming native sensor data in UDP}
+  s.description   = %q{Input plugin for Fluentd for Juniper devices telemetry data streaming native sensor data in UDP }
   s.summary       = %q{Input plugin for Fluentd for Juniper devices telemetry data streaming native sensor data in UDP}
-  s.homepage      = ""
+  s.homepage      = "https://git.juniper.net/vijaygadde/fluent-plugin-udp-native-sensors"
   s.license       = 'Apache 2.0'
 
   s.files         = Dir['lib/fluent/plugin/parser*.rb', 'lib/*.rb', 'lib/google/protobuf/*.rb' ]

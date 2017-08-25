@@ -1,4 +1,4 @@
-require 'juniper_telemetry_lib.rb'
+require 'juniper_telemetry_udp_lib.rb'
 require 'protobuf'
 require 'telemetry_top.pb.rb'
 require 'port.pb.rb'

@@ -12,8 +12,11 @@ If you want the data to be stored separately per sensor, then you have to use `r
 ## Installation
 
 Download the plugin from `https://git.juniper.net/vijaygadde/fluent-plugin-udp-native-sensors`
+
 Change directory to `<path-of-download>/fluent-plugin-udp-native-sensors`
+
 Build using `gem build fluent-plugin-udp-native-sensors.gemspec`
+
 Install using `gem install fluent-plugin-udp-native-sensors-0.0.1.gem`
 
 
@@ -56,5 +59,6 @@ Pull requests are very welcome!!
 ## Copyright
 
 Copyright :  Copyright (c) 2017 Juniper Networks, Inc. All rights reserved.
+
 License   :  Apache License, Version 2.0
 

@@ -84,6 +84,11 @@ module Fluent
         datas_sensors.each do |sensor, s_data|
             if s_data.is_a? Hash
                 final_data = parse_hash(s_data, jnpr_sensor)[0]
+                if final_data[0].is_a? Hash
+                    final_data = final_data
+                else
+                    final_data = final_data[0]
+                end
             end
         end
 

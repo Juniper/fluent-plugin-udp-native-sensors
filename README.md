@@ -9,6 +9,16 @@ Data from all the sensors are emitted with same tag. So if you want to distingui
 What this means is, in case if you want to store the data in databases, by default all the data will be stored in single table/measurement.
 If you want the data to be stored separately per sensor, then you have to use `rewrite_tag_filter` plugin. Configs examples are given below.
 
+Below are few points that are considered:
+
+* No sessions are maintained to the devices
+* Existing UDP listener input plugin should be used to listen on configured ports
+* Data from UDP listener will be passed to the parser plugin that is written in here
+* In case of changes to sensor definition, the proto files have to be recompiled to appropriate library based on the collector and added to the plugin repository
+* In case of addition of new sensor, corresponding proto files need to be compiled to appropriate library and should be added to the plugin repository
+* Timestamp, system_id from the JTI message and hostname on which the collector is running is added to all the entries
+
+
 ## Installation
 
 Download the plugin from `https://git.juniper.net/vijaygadde/fluent-plugin-udp-native-sensors`

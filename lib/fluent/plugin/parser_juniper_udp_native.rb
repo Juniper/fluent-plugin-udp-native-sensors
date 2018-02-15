@@ -57,7 +57,11 @@ module Fluent
 
         ## Extract device name & Timestamp
         device_name = jti_msg.system_id
-        gpb_time = epoc_to_sec(jti_msg.timestamp)
+        yield_time = epoc_to_sec(jti_msg.timestamp)
+        gpb_time = epoc_to_ms(jti_msg.timestamp)
+        $log.debug jti_msg.timestamp
+        $log.debug yield_time
+        $log.debug gpb_time
         measurement_prefix = "enterprise.juniperNetworks"
 
         ## Extract sensor
@@ -97,10 +101,11 @@ module Fluent
             data['device'] = device_name
             data['host'] = host
             data['sensor_name'] = datas_sensors.keys[0]
+            data['time'] = gpb_time
         end
 
         for data in final_data
-            yield gpb_time, data
+            yield yield_time, data
         end
 
 

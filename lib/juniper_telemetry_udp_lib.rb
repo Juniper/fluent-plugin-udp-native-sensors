@@ -107,3 +107,17 @@ def epoc_to_sec(epoc)
   return epoc
 end
 
+def epoc_to_ms(epoc)
+    nbr_digit = epoc.to_s.size
+    if nbr_digit == 13
+        return epoc.to_i
+    elsif nbr_digit == 10
+        return (epoc.to_i * 1000).to_i
+    elsif nbr_digit == 16
+        return (epoc.to_i/1000).to_i
+    elsif nbr_digit == 19
+        return (epoc.to_i/1000000).to_i
+    end
+end
+
+

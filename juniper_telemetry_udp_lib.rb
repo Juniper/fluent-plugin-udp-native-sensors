@@ -1,6 +1,8 @@
 #
 # Copyright (c) 2017 Juniper Networks, Inc. All rights reserved.
 #
+require 'json'
+require 'set'
 
 ##############################
 ## Supporting functions     ##
@@ -12,6 +14,11 @@ def parse_each_field(data, master_key='')
     arr_key = Array.new
     fin_data = Array.new
 
+    $log.debug data
+    datas_sensors = JSON.parse(data.to_json)
+    $log.debug datas_sensors
+
+    #leaf_data['key_fields'] = Set.new
     leaf_data['key_fields'] = Hash.new
     data.each_field do |key, value|
         qualified_key_name = key.fully_qualified_name.to_s
@@ -35,6 +42,7 @@ def parse_each_field(data, master_key='')
             # Check for keys
             begin
                 if key.get_option('.telemetry_options').field?("is_key") and key.get_option('.telemetry_options').is_key
+                    #leaf_data['key_fields'].add(new_master_key)
                     leaf_data['key_fields'][new_master_key] = value
                 else
                     leaf_data[new_master_key] = value
@@ -44,6 +52,7 @@ def parse_each_field(data, master_key='')
             end
         # Check of repeated nodes. These are basically like lists
         elsif key.try('repeated?')
+            #tmp_data = parse_repeated(value.send(key.fully_qualified_name.to_s), new_master_key)
             tmp_data = parse_repeated(value, new_master_key)
             if tmp_data.any?
                 arr_data << tmp_data
@@ -71,6 +80,11 @@ def parse_each_field(data, master_key='')
     end
     # Put all the data from Array to hash.
     # If the key names with list name to avoid overwriting
+    $log.debug "''''''''''''''''''''''''''''''''''''''''''''''''''"
+    $log.debug leaf_data
+    $log.debug arr_key
+    $log.debug arr_data
+    $log.debug "''''''''''''''''''''''''''''''''''''''''''''''''''"
     if leaf_data.length == 1 and leaf_data['key_fields'].empty?
         leaf_data.delete('key_fields')
     end
@@ -85,6 +99,7 @@ def parse_each_field(data, master_key='')
                         data_aa.each do |key_aa, value_aa|
                             leaf_tmp[key_aa] = value_aa
                         end
+                        #leaf_tmp['key_fields'].merge(leaf_data['key_fields'])
                         leaf_tmp['key_fields'].update(leaf_data['key_fields'])
                         fin_data += [leaf_tmp]
                     else
@@ -93,6 +108,7 @@ def parse_each_field(data, master_key='')
                             data_ha.each do |key_aa, value_aa|
                                 leaf_tmp[key_aa] = value_aa
                             end
+                            #leaf_tmp['key_fields'].merge(leaf_data['key_fields'])
                             leaf_tmp['key_fields'].update(leaf_data['key_fields'])
                             fin_data += [leaf_tmp]
                         end
@@ -112,13 +128,27 @@ def parse_each_field(data, master_key='')
     end
     arr_data.clear
     if arr_key.length == 0
+        $log.debug "=========================="
+        $log.debug "=========================="
+        $log.debug "=========================="
+        $log.debug "=========================="
+
         fin_data = [leaf_data.clone]
     end
   
+    ##if (fin_data.to_a.empty?) && (not leaf_data.empty?) && (leaf_flag)
+    #$log.debug fin_data
+    $log.debug fin_data.to_a.empty?
+    $log.debug leaf_data.empty?
     if (fin_data.to_a.empty?) && (not leaf_data.empty?)
         fin_data += [leaf_data]
     end
        
+    $log.debug "++++++++++++++++++++++++++"
+    $log.debug "++++++++++++++++++++++++++"
+    $log.debug "++++++++++++++++++++++++++"
+    $log.debug "++++++++++++++++++++++++++"
+    $log.debug "++++++++++++++++++++++++++"
     $log.debug fin_data
     return fin_data 
 end
@@ -208,8 +238,19 @@ def parse_array(data, jnpr_sensor, master_key)
 end
 
 def parse_repeated(data, master_key)
+    $log.debug data
+    $log.debug data.class
+    $log.debug data.inspect
+    #$log.debug data.methods.sort
+    data.each_entry do |k, v|
+        $log.debug k, v
+    end
     arr_data = []
     for value in data
+        $log.debug value
+        ## Check for list data 
+        #if value.try('repeated?') and value.repeated
+        #    $log.debug "This is REPEATED"
         # Check if it is hash data
         if value.try('each_field')
             $log.debug master_key
@@ -218,6 +259,13 @@ def parse_repeated(data, master_key)
             $log.error "Leaf elements in array are not coded. Please open a issue."
         end
    end
+    #while true
+    #    if arr_data.length == 1 and arr_data[0].is_a? Array
+    #        arr_data = arr_data[0]
+    #    else
+    #        break
+    #    end
+    #end
     return arr_data
 end
 

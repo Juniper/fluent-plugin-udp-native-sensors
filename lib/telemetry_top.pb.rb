@@ -1,7 +1,3 @@
-#
-# Copyright (c) 2017 Juniper Networks, Inc. All rights reserved.
-#
-
 # encoding: utf-8
 
 ##
@@ -58,6 +54,5 @@ class ::Google::Protobuf::FieldOptions < ::Protobuf::Message
 end
 
 class ::EnterpriseSensors < ::Protobuf::Message
-  optional ::JuniperNetworksSensors, :".juniperNetworks", 2636, :extension => true
+   optional ::JuniperNetworksSensors, :".juniperNetworks", 2636, :extension => true
 end
-

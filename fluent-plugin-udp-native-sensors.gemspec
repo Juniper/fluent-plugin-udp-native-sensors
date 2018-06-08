@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = %w(lib)
 
-  s.add_runtime_dependency "fluentd", "<= 0.12.42"
-  s.add_runtime_dependency "protobuf"
+  s.add_runtime_dependency "fluentd", "<= 0.12.43"
+  s.add_runtime_dependency "protobuf", "= 3.8.2"
   s.add_development_dependency "rake"
   s.add_runtime_dependency  "fluent-plugin-rewrite-tag-filter", "< 1.7.0"
 end

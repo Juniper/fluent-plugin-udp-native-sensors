@@ -1,7 +1,3 @@
-#
-# Copyright (c) 2017 Juniper Networks, Inc. All rights reserved.
-#
-
 # encoding: utf-8
 
 ##
@@ -13,6 +9,7 @@ require 'protobuf'
 ##
 # Imports
 #
+require 'pbj.pb'
 require 'telemetry_top.pb'
 
 
@@ -29,18 +26,18 @@ class QueueMonitorStats < ::Protobuf::Message; end
 # Message Fields
 #
 class QueueMonitor
-  repeated ::QueueMonitorElement, :queue_monitor_element_info, 1
+  repeated ::QueueMonitorElement, :queue_monitor_element_info, 1, :".pbj_field_option" => { :max_count => 2048 }
 end
 
 class QueueMonitorElement
-  required :string, :if_name, 1, :".telemetry_options" => { :is_key => true }
-  optional :string, :parent_ae_name, 2
+  required :string, :if_name, 1, :".pbj_field_option" => { :type => ::FieldType::FT_POINTER }, :".telemetry_options" => { :is_key => true }
+  optional :string, :parent_ae_name, 2, :".pbj_field_option" => { :type => ::FieldType::FT_POINTER }
   optional ::QueueMonitorDirection, :queue_monitor_stats_ingress, 3
   optional ::QueueMonitorDirection, :queue_monitor_stats_egress, 4
 end
 
 class QueueMonitorDirection
-  repeated ::QueueMonitorStats, :queue_monitor_stats_info, 1
+  repeated ::QueueMonitorStats, :queue_monitor_stats_info, 1, :".pbj_field_option" => { :max_count => 8 }
 end
 
 class QueueMonitorStats

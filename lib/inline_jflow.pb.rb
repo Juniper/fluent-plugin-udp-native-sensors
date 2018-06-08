@@ -1,7 +1,3 @@
-#
-# Copyright (c) 2017 Juniper Networks, Inc. All rights reserved.
-#
-
 # encoding: utf-8
 
 ##
@@ -48,6 +44,9 @@ class InlineJflow
   optional :bool, :ipv6_extended_attribute, 20
   optional :bool, :flexible_flow_sizing, 21
   optional :bool, :use_extended_flow_memory, 22
+  optional :string, :bridge_flows_export_format, 23
+  optional :uint64, :bridge_max_flows_count, 24
+  optional :uint32, :bridge_configured_observation_domain_id, 25
   repeated ::InlineJflowNpuStats, :npu_stats, 50
 end
 
@@ -109,6 +108,20 @@ class InlineJflowNpuStats
   optional :uint64, :mpls_flow_packet_export_failure, 212, :".telemetry_options" => { :is_counter => true }
   optional :float, :mpls_flow_table_utilization, 213, :".telemetry_options" => { :is_gauge => true }
   optional :uint64, :mpls_flow_insert_count, 214, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flow_packets, 251, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flow_bytes, 252, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_total_flows, 253, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_active_flows, 254, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flows_exported, 255, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_packets_exported, 256, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flows_inactive_timed_out, 257, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flows_active_timed_out, 258, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flow_create_failure, 259, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_route_lookup_failure, 260, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_autonomous_system_lookup_failure, 261, :".telemetry_options" => { :is_counter => true }
+  optional :uint64, :bridge_flow_packet_export_failure, 262, :".telemetry_options" => { :is_counter => true }
+  optional :float, :bridge_flow_table_utilization, 263, :".telemetry_options" => { :is_gauge => true }
+  optional :uint64, :bridge_flow_insert_count, 264, :".telemetry_options" => { :is_counter => true }
 end
 
 

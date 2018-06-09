@@ -67,9 +67,9 @@ module Fluent
           "fabricMessageExt",
           "inline_jflow_stats_ext",
           "npu_memory_ext",
-#          "jnpr_sr_stats_per_if_egress_ext",
-#          "jnpr_sr_stats_per_if_ingress_ext",
-#          "jnpr_sr_stats_per_sid_ext"
+          "jnpr_sr_stats_per_if_egress_ext",
+          "jnpr_sr_stats_per_if_ingress_ext",
+          "jnpr_sr_stats_per_sid_ext"
         ]
 
         ## Decode GBP packet

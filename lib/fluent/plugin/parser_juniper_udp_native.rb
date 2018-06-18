@@ -21,7 +21,12 @@ require 'npu_memory_utilization.pb.rb'
 require 'port_exp.pb.rb'
 require 'packet_stats.pb.rb'
 require 'optics.pb.rb'
-require 'port.pb.rb'
+require 'ipsec_telemetry.pb.rb'
+require 'session_telemetry.pb.rb'
+require 'sr_stats_per_if_egress.pb.rb'
+require 'sr_stats_per_if_ingress.pb.rb'
+require 'sr_stats_per_sid.pb.rb'
+require 'svcset_telemetry.pb.rb'
 require 'socket'
 require 'json'
 require 'google/protobuf/descriptor.pb'
@@ -69,7 +74,10 @@ module Fluent
           "npu_memory_ext",
           "jnpr_sr_stats_per_if_egress_ext",
           "jnpr_sr_stats_per_if_ingress_ext",
-          "jnpr_sr_stats_per_sid_ext"
+          "jnpr_sr_stats_per_sid_ext",
+          "jnprScvsSessionExt",
+          "jnprScvsInfraExt",
+          "jnprIPsecVPNExt"
         ]
 
         ## Decode GBP packet

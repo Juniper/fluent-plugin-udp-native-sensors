@@ -33,10 +33,10 @@ require 'google/protobuf/descriptor.pb'
 
 
 module Fluent
-  class TextParser
-    class JuniperJtiParser < Parser
+  module Plugin
+    class JuniperUdpNativeParser < Parser
 
-      Plugin.register_parser("juniper_udp_native", self)
+      Fluent:: Plugin.register_parser("juniper_udp_native", self)
 
       config_param :output_format, :string, :default => 'structured'
 
@@ -103,24 +103,12 @@ module Fluent
           return
         end
 
-        $log.debug "=============================================================="
-        $log.debug "=============================================================="
-        $log.debug "TEXT: #{text}"
-        $log.debug "JTI_MSG: #{jti_msg}"
-        $log.debug "JNPR_SENSOR: #{jnpr_sensor}"
-        $log.debug "INSPECT : " + jnpr_sensor.inspect
-        $log.debug datas_sensors
-        $log.debug "=============================================================="
-
         ## Go over each Sensor
         final_data = Array.new
         supported_sensor_list.each do |sensor|
             if jnpr_sensor.send(sensor).nil?
                 next
             end
-            $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            $log.debug sensor
-            $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
             final_data = parse_each_field(jnpr_sensor.send(sensor))
             if final_data[0].is_a? Hash
                 final_data = final_data
@@ -145,6 +133,7 @@ module Fluent
         end
 
         for data in final_data
+	    $log.debug data
             yield yield_time, data
         end
 

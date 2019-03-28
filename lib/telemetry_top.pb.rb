@@ -52,4 +52,6 @@ end
 class ::Google::Protobuf::FieldOptions < ::Protobuf::Message
   optional ::TelemetryFieldOptions, :".telemetry_options", 1024, :extension => true
 end
-
+class ::EnterpriseSensors < ::Protobuf::Message
+  optional ::JuniperNetworksSensors, :".juniperNetworks", 2636, :extension => true
+end

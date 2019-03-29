@@ -30,7 +30,7 @@ end
 class SegmentRoutingRecord
   required :string, :sid_identifier, 1, :".telemetry_options" => { :is_key => true }
   optional :uint32, :instance_identifier, 2, :".telemetry_options" => { :is_key => true }
-  required :string, :counter_name, 3, :".telemetry_options" => { :is_key => true }
+  optional :string, :counter_name, 3, :".telemetry_options" => { :is_key => true }
   optional ::SegmentRoutingStats, :ingress_stats, 4
   optional ::SegmentRoutingStats, :egress_stats, 5
 end

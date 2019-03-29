@@ -33,7 +33,7 @@ class PBJOptions < ::Protobuf::Message; end
 ##
 # File Options
 #
-#set_option :java_package, "net.juniper.pbj"
+# set_option :java_package, "net.juniper.pbj"
 
 
 ##

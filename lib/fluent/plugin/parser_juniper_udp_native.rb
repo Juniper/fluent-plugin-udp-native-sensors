@@ -74,6 +74,8 @@ require 'xmlproxyd_show_local_interface_OC.pb.rb'
 require 'vrrpd_oc.pb.rb'
 require 'smid_oc.pb.rb'
 require 'rpd_te_oc.pb.rb'
+require 'twamp.pb.rb'
+require 'circuit.pb.rb'
 require 'socket'
 require 'json'
 require 'date'
@@ -188,6 +190,16 @@ module Fluent
         ## Extract sensor
         begin
           jnpr_sensor = jti_msg.enterprise.juniperNetworks
+        rescue => e
+          $log.error "Cannot decode data as juniperNetworks will try Ericsson"
+          begin
+            jnpr_sensor = jti_msg.enterprise.ericssonNetworks
+          rescue => e
+            $log.error "Could not decode data as ericssonNetworks also"
+            return
+          end
+        end
+        begin
           datas_sensors = JSON.parse(jnpr_sensor.to_json)
           $log.debug  "Extract sensor data from #{device_name} with output #{output_format}"
         rescue => e

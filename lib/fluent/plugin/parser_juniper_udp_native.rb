@@ -106,7 +106,7 @@ module Fluent
       def parse(text)
 
         host = Socket.gethostname
-        supported_sensor_list = [
+        juniper_sensor_list = [
           "jnpr_telemetry_system_ext",
           "jnpr_junos_ancp_ext",
           "jnpr_junos_authentication_ext",
@@ -175,6 +175,10 @@ module Fluent
           "jnpr_interfaces_vrrp_ext",
           "jnpr_interfaces_local_interface_ext"
         ]
+        ericsson_sensor_list = [
+           "twamp_session",
+           "logical_interface"
+        ]
 
         ## Decode GBP packet
         jti_msg =  TelemetryStream.decode(text)
@@ -190,14 +194,17 @@ module Fluent
         ## Extract sensor
         begin
           jnpr_sensor = jti_msg.enterprise.juniperNetworks
-        rescue => e
-          $log.error "Cannot decode data as juniperNetworks will try Ericsson"
-          begin
-            jnpr_sensor = jti_msg.enterprise.ericssonNetworks
-          rescue => e
-            $log.error "Could not decode data as ericssonNetworks also"
-            return
+          sensor_list = juniper_sensor_list
+          if jnpr_sensor == nil
+            jnpr_sensor = mjti_msg.enterprise.ericssonNetworks
+            if jnpr_sensor == nil
+              return
+            end
+            sensor_list = ericsson_sensor_list
           end
+        rescue => e
+          $log.error "Cannot decode data"
+          return
         end
         begin
           datas_sensors = JSON.parse(jnpr_sensor.to_json)
@@ -219,7 +226,7 @@ module Fluent
 
         ## Go over each Sensor
         final_data = Array.new
-        supported_sensor_list.each do |sensor|
+        sensor_list.each do |sensor|
             if jnpr_sensor.send(sensor).nil?
                 next
             end
@@ -258,3 +265,4 @@ module Fluent
     end
   end
 end
+

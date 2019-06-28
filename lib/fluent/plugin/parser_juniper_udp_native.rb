@@ -196,6 +196,7 @@ module Fluent
           jnpr_sensor = jti_msg.enterprise.juniperNetworks
           sensor_list = juniper_sensor_list
           if jnpr_sensor == nil
+            $log.error "Not juniper Sensor. Will try Erricon"
             jnpr_sensor = mjti_msg.enterprise.ericssonNetworks
             if jnpr_sensor == nil
               return

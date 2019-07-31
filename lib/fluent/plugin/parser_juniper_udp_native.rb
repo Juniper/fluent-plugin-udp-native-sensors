@@ -179,6 +179,7 @@ module Fluent
            "twamp_session",
            "logical_interface"
         ]
+        sensor_index = 0
 
         ## Decode GBP packet
         jti_msg =  TelemetryStream.decode(text)
@@ -202,6 +203,7 @@ module Fluent
               return
             end
             sensor_list = ericsson_sensor_list
+            sensor_index = 2
           end
         rescue => e
           $log.error "Cannot decode data"
@@ -246,7 +248,7 @@ module Fluent
         for data in final_data
             data['device'] = device_name
             data['host'] = host
-            data['sensor_name'] = datas_sensors.keys[0]
+            data['sensor_name'] = datas_sensors.keys[sensor_index]
             data['time'] = gpb_time
             if not data.key?('key_fields')
                 data['key_fields'] = {'_seq': seq}

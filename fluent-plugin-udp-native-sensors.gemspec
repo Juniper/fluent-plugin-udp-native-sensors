@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "fluentd", "<= 0.12.43"
   s.add_runtime_dependency "protobuf", "= 3.8.2"
+  s.add_runtime_dependency "activesupport", "<= 5.2.0"
   s.add_development_dependency "rake"
   s.add_runtime_dependency  "fluent-plugin-rewrite-tag-filter", "< 1.7.0"
 end

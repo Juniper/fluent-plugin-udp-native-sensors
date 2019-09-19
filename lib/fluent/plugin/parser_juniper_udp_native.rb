@@ -180,69 +180,76 @@ module Fluent
            "logical_interface"
         ]
         sensor_index = 0
-
-        ## Decode GBP packet
-        jti_msg =  TelemetryStream.decode(text)
-
-        resource = ""
-
-        ## Extract device name & Timestamp
-        device_name = jti_msg.system_id
-        gpb_time = DateTime.now.strftime('%Q').to_i
-        $log.debug gpb_time
-        measurement_prefix = "enterprise.juniperNetworks"
-
-        ## Extract sensor
+        
         begin
-          jnpr_sensor = jti_msg.enterprise.juniperNetworks
-          sensor_list = juniper_sensor_list
-          if jnpr_sensor == nil
-            $log.debug "Not juniper Sensor. Will try Erricon"
-            jnpr_sensor = jti_msg.enterprise.ericssonNetworks
+          ## Decode GBP packet
+          jti_msg =  TelemetryStream.decode(text)
+  
+          resource = ""
+  
+          ## Extract device name & Timestamp
+          device_name = jti_msg.system_id
+          gpb_time = DateTime.now.strftime('%Q').to_i
+          $log.debug gpb_time
+          measurement_prefix = "enterprise.juniperNetworks"
+  
+          ## Extract sensor
+          begin
+            jnpr_sensor = jti_msg.enterprise.juniperNetworks
+            sensor_list = juniper_sensor_list
             if jnpr_sensor == nil
-              return
+              $log.debug "Not juniper Sensor. Will try Erricon"
+              jnpr_sensor = jti_msg.enterprise.ericssonNetworks
+              if jnpr_sensor == nil
+                return
+              end
+              sensor_list = ericsson_sensor_list
+              sensor_index = 2
             end
-            sensor_list = ericsson_sensor_list
-            sensor_index = 2
+          rescue => e
+            $log.error "Cannot decode data"
+            return
+          end
+          begin
+            datas_sensors = JSON.parse(jnpr_sensor.to_json)
+            $log.debug  "Extract sensor data from #{device_name} with output #{output_format}"
+          rescue => e
+            $log.warn   "Unable to extract sensor data sensor from jti_msg.enterprise.juniperNetworks, Error during processing: #{$!}"
+            $log.debug  "Unable to extract sensor data sensor from jti_msg.enterprise.juniperNetworks, Data Dump : " + jti_msg.inspect.to_s
+            return
+          end
+  
+          $log.debug "=============================================================="
+          $log.debug "=============================================================="
+          $log.debug "TEXT: #{text}"
+          $log.debug "JTI_MSG: #{jti_msg}"
+          $log.debug "JNPR_SENSOR: #{jnpr_sensor}"
+          $log.debug "INSPECT : " + jnpr_sensor.inspect
+          $log.debug datas_sensors
+          $log.debug "=============================================================="
+  
+          ## Go over each Sensor
+          final_data = Array.new
+          sensor_list.each do |sensor|
+              if jnpr_sensor.send(sensor).nil?
+                  next
+              end
+              $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+              $log.debug sensor
+              $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+              final_data = parse_each_field(jnpr_sensor.send(sensor))
+              if final_data[0].is_a? Hash
+                  final_data = final_data
+              else
+                  final_data = final_data[0]
+              end
+  
           end
         rescue => e
-          $log.error "Cannot decode data"
+          $log.error "Problem decoding/parsing the incoming packet"
+          $log.error e.message
+          e.backtrace.each { |line| $log.debug line }
           return
-        end
-        begin
-          datas_sensors = JSON.parse(jnpr_sensor.to_json)
-          $log.debug  "Extract sensor data from #{device_name} with output #{output_format}"
-        rescue => e
-          $log.warn   "Unable to extract sensor data sensor from jti_msg.enterprise.juniperNetworks, Error during processing: #{$!}"
-          $log.debug  "Unable to extract sensor data sensor from jti_msg.enterprise.juniperNetworks, Data Dump : " + jti_msg.inspect.to_s
-          return
-        end
-
-        $log.debug "=============================================================="
-        $log.debug "=============================================================="
-        $log.debug "TEXT: #{text}"
-        $log.debug "JTI_MSG: #{jti_msg}"
-        $log.debug "JNPR_SENSOR: #{jnpr_sensor}"
-        $log.debug "INSPECT : " + jnpr_sensor.inspect
-        $log.debug datas_sensors
-        $log.debug "=============================================================="
-
-        ## Go over each Sensor
-        final_data = Array.new
-        sensor_list.each do |sensor|
-            if jnpr_sensor.send(sensor).nil?
-                next
-            end
-            $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            $log.debug sensor
-            $log.debug "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            final_data = parse_each_field(jnpr_sensor.send(sensor))
-            if final_data[0].is_a? Hash
-                final_data = final_data
-            else
-                final_data = final_data[0]
-            end
-
         end
         seq = 0 
         for data in final_data
